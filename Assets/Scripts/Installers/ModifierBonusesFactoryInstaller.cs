@@ -1,5 +1,4 @@
-﻿using DiceRoller.UI;
-using DiceRoller.UI.Factories;
+﻿using DiceRoller.UI.Factories;
 using Zenject;
 
 namespace DiceRoller.Installers
@@ -10,7 +9,8 @@ namespace DiceRoller.Installers
         {
             Container
                 .Bind<IModifierBonusesFactory>()
-                .To<ModifierBonusesFactory>().AsSingle();
+                .To<ModifierBonusesFactory>()
+                .AsSingle();
         }
     }
 }

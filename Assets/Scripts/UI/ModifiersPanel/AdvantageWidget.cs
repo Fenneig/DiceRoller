@@ -2,7 +2,7 @@
 using UnityEngine;
 using Zenject;
 
-namespace DiceRoller.UI
+namespace DiceRoller.UI.ModifiersPanel
 {
     public class AdvantageWidget : MonoBehaviour
     {

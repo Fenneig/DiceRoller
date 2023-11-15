@@ -1,6 +1,4 @@
-﻿using DiceRoller.UI;
-
-namespace DiceRoller.Gameplay.Stats
+﻿namespace DiceRoller.Gameplay.Stats
 {
     public class CharacterStats
     {

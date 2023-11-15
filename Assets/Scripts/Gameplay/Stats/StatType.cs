@@ -1,4 +1,4 @@
-﻿namespace DiceRoller.UI
+﻿namespace DiceRoller.Gameplay.Stats
 {
     public enum StatType
     {

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace DiceRoller.UI
+namespace DiceRoller.UI.ModifiersPanel
 {
     public class CircumstanceBonusWidget : MonoBehaviour
     {

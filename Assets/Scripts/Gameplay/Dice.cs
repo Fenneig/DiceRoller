@@ -82,7 +82,7 @@ namespace DiceRoller.Gameplay
             result += _rollBonuses.CheckStat.Stat.Mod;
             result += _rollBonuses.CircumstanceBonus.Value;
 
-            Debug.Log($"From {_rollBonuses.CheckStat.StatType.ToString()} got {_rollBonuses.CheckStat.Stat.Mod}, from {_rollBonuses.CircumstanceBonus.Name} got {_rollBonuses.CircumstanceBonus.Value} result = {result}");
+            Debug.Log($"From {_rollBonuses.CheckStat.StatType.ToString()} got {_rollBonuses.CheckStat.Stat.Mod}, from {_rollBonuses.CircumstanceBonus.BonusName} got {_rollBonuses.CircumstanceBonus.Value} result = {result}");
         }
     }
 }

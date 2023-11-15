@@ -1,10 +1,11 @@
-﻿using DiceRoller.Gameplay.Stats;
+﻿using DiceRoller.Gameplay.Roll;
+using DiceRoller.Gameplay.Stats;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace DiceRoller.UI
+namespace DiceRoller.UI.StatPanel
 {
     public class StatWidget : MonoBehaviour
     {
@@ -14,10 +15,12 @@ namespace DiceRoller.UI
         [SerializeField] private StatType _statType;
         
         private Stat _currentStat;
+        private RollBonuses _rollBonuses;
 
         [Inject]
-        private void Construct(CharacterStats characterStats)
+        private void Construct(CharacterStats characterStats, RollBonuses rollBonuses)
         {
+            _rollBonuses = rollBonuses;
             _currentStat = _statType switch
             {
                 StatType.Strength => characterStats.Strength,
@@ -30,6 +33,7 @@ namespace DiceRoller.UI
             };
             
             _currentStat.OnValueChanged += UpdateInfo;
+            _currentStat.OnValueChanged += _rollBonuses.UpdateStatBonus;
         }
         
         private void Awake()
@@ -48,6 +52,7 @@ namespace DiceRoller.UI
         private void OnDestroy()
         {
             _currentStat.OnValueChanged -= UpdateInfo;
+            _currentStat.OnValueChanged -= _rollBonuses.UpdateStatBonus;
         }
     }
 }

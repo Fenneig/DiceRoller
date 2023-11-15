@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using DG.Tweening;
+using DiceRoller.Gameplay.Roll;
 using UnityEngine;
+using Zenject;
 using Random = UnityEngine.Random;
 
 namespace DiceRoller.Gameplay
@@ -13,6 +15,14 @@ namespace DiceRoller.Gameplay
         [SerializeField] private float _rollDuration;
         [SerializeField] private Transform _diceTransform;
         [SerializeField] private Rigidbody _rigidbody;
+
+        private RollBonuses _rollBonuses;
+
+        [Inject]
+        private void Construct(RollBonuses rollBonuses)
+        {
+            _rollBonuses = rollBonuses;
+        }
     
     
         [ContextMenu("Roll")]
@@ -37,7 +47,7 @@ namespace DiceRoller.Gameplay
                     DOTween.Sequence()
                         .PrependInterval(1f)
                         .Append(_rigidbody.transform.DOMove(Vector3.zero, 0.5f))
-                        .OnComplete(() => GetTopSide());
+                        .OnComplete(GetTopSide);
                 });
         }
 
@@ -50,7 +60,7 @@ namespace DiceRoller.Gameplay
         }
 
         [ContextMenu("GetTopSide Side")]
-        private int GetTopSide()
+        private void GetTopSide()
         {
             Vector3 topPosition = _sides[0].position;
             int sideValue = 1;
@@ -63,7 +73,16 @@ namespace DiceRoller.Gameplay
                 }
             }
 
-            return sideValue;
+            ShowResult(sideValue);
+        }
+
+        private void ShowResult(int diceResult)
+        {
+            var result = diceResult;
+            result += _rollBonuses.CheckStat.Stat.Mod;
+            result += _rollBonuses.CircumstanceBonus.Value;
+
+            Debug.Log($"From {_rollBonuses.CheckStat.StatType.ToString()} got {_rollBonuses.CheckStat.Stat.Mod}, from {_rollBonuses.CircumstanceBonus.Name} got {_rollBonuses.CircumstanceBonus.Value} result = {result}");
         }
     }
 }

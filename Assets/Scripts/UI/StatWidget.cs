@@ -29,7 +29,7 @@ namespace DiceRoller.UI
                 _ => _currentStat
             };
             
-            _currentStat.OnValueChanged += Update;
+            _currentStat.OnValueChanged += UpdateInfo;
         }
         
         private void Awake()
@@ -40,14 +40,14 @@ namespace DiceRoller.UI
 
         private void AddValue() => _currentStat.Value++;
         private void SubtractValue() => _currentStat.Value--;
-        private void Update()
+        private void UpdateInfo()
         {
             _statValue.text = _currentStat.Value.ToString();
         }
 
         private void OnDestroy()
         {
-            _currentStat.OnValueChanged -= Update;
+            _currentStat.OnValueChanged -= UpdateInfo;
         }
     }
 }

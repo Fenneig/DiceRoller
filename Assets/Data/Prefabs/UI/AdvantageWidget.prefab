@@ -930,7 +930,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1225000560485128413}
         m_TargetAssemblyTypeName: DiceRoller.UI.AdvantageWidget, Assembly-CSharp
-        m_MethodName: UpdateAdvantageState
+        m_MethodName: UpdateInfo
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

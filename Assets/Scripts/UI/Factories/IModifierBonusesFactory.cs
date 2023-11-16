@@ -1,4 +1,4 @@
-﻿using DiceRoller.UI.ResultPanel;
+﻿using DiceRoller.UI.BonusesPanel;
 using UnityEngine;
 
 namespace DiceRoller.UI.Factories

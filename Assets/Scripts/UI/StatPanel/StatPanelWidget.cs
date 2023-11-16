@@ -7,7 +7,7 @@ using Zenject;
 
 namespace DiceRoller.UI.StatPanel
 {
-    public class StatWidget : MonoBehaviour
+    public class StatPanelWidget : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI _statValue;
         [SerializeField] private Button _addButton;

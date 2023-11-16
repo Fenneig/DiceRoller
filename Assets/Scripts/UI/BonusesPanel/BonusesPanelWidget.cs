@@ -1,12 +1,13 @@
-﻿using DG.Tweening;
+﻿using System;
+using DG.Tweening;
 using DiceRoller.Gameplay.Roll;
 using DiceRoller.UI.Factories;
 using UnityEngine;
 using Zenject;
 
-namespace DiceRoller.UI.ResultPanel
+namespace DiceRoller.UI.BonusesPanel
 {
-    public class BonusesPanel : MonoBehaviour
+    public class BonusesPanelWidget : MonoBehaviour
     {
         [SerializeField] private ModifierBonusWidget _modifierBonusWidgetPrefab;
         [SerializeField] private float _scaleTime = .5f;
@@ -29,14 +30,37 @@ namespace DiceRoller.UI.ResultPanel
 
         private void SetupWidgets()
         {
+            CreateWidgets();
+
+            PopulateOnChangeEvents();
+
+            PopulateOnCountEvents();
+
+            TurnOffWidgets();
+        }
+
+        private void CreateWidgets()
+        {
             _statBonusWidget = _modifierBonusesFactory.GenerateWidget(_modifierBonusWidgetPrefab, transform);
             _advantageTypeWidget = _modifierBonusesFactory.GenerateWidget(_modifierBonusWidgetPrefab, transform);
             _circumstanceBonusWidget = _modifierBonusesFactory.GenerateWidget(_modifierBonusWidgetPrefab, transform);
-            
+        }
+
+        private void PopulateOnChangeEvents()
+        {
             _rollBonuses.OnStatBonusChanged += UpdateStatBonusWidget;
             _rollBonuses.OnAdvantageTypeChanged += UpdateAdvantageTypeWidget;
             _rollBonuses.OnCircumstanceBonusChanged += UpdateCircumstanceBonusWidget;
-            
+        }
+
+        private void PopulateOnCountEvents()
+        {
+            _rollBonuses.OnStatBonusCount = action => WiggleWidget(_statBonusWidget, action);
+            _rollBonuses.OnCircumstanceBonusCount = action => WiggleWidget(_circumstanceBonusWidget, action);
+        }
+
+        private void TurnOffWidgets()
+        {
             _statBonusWidget.transform.localScale = Vector3.zero;
             _advantageTypeWidget.transform.localScale = Vector3.zero;
             _circumstanceBonusWidget.transform.localScale = Vector3.zero;
@@ -108,6 +132,15 @@ namespace DiceRoller.UI.ResultPanel
                 {
                     widget.gameObject.SetActive(false);
                 });
+        }
+
+        private void WiggleWidget(ModifierBonusWidget widget, Action onWiggleComplete)
+        {
+            widget.transform.DOScale(Vector3.one * 1.1f, .2f);
+            DOTween.Sequence()
+                .Append(widget.transform.DOShakeRotation(.2f, Vector3.forward))
+                .Append(widget.transform.DOScale(Vector3.one, .2f))
+                .OnComplete(() => onWiggleComplete?.Invoke());
         }
 
         private void OnDestroy()

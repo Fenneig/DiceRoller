@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace DiceRoller.UI.ResultPanel
+namespace DiceRoller.UI.BonusesPanel
 {
     public class ModifierBonusWidget : MonoBehaviour
     {

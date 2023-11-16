@@ -16,6 +16,9 @@ namespace DiceRoller.Gameplay.Roll
         public event Action OnStatBonusChanged;
         public event Action OnAdvantageTypeChanged;
         public event Action OnCircumstanceBonusChanged;
+        
+        public Action<Action> OnStatBonusCount;
+        public Action<Action> OnCircumstanceBonusCount;
 
         public RollBonuses()
         {

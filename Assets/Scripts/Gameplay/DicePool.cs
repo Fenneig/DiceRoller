@@ -1,4 +1,5 @@
-﻿using DG.Tweening;
+﻿using System;
+using DG.Tweening;
 using DiceRoller.Gameplay.Roll;
 using UnityEngine;
 using Zenject;
@@ -52,51 +53,71 @@ namespace DiceRoller.Gameplay
             _advantageDice.gameObject.SetActive(false);
         }
         
-        public void RollDices()
+        public void RollDices(Action onRollComplete)
         {
             if (_rollBonuses.AdvantageType == AdvantageType.None)
             {
-                _mainDice.Roll(_singleDiceTransform.position, CalculateFinalResult);
+                _mainDice.Roll(_singleDiceTransform.position, onRollComplete);
             }
             else
             {
                 _mainDice.Roll(_firstPairDiceTransform.position);
-                _advantageDice.Roll(_advantagePairDiceTransform.position ,CalculateFinalResult);
+                _advantageDice.Roll(_advantagePairDiceTransform.position, onRollComplete);
             }
         }
 
-        private void CalculateFinalResult()
+        public int GetRollResult()
         {
             int result = 0;
-            result += _rollBonuses.CheckStat.Stat.Mod;
-            result += _rollBonuses.CircumstanceBonus.Value;
+            
+            int mainDiceValue = _mainDice.GetTopSideValue();
+            int advantageDiceValue = _advantageDice.GetTopSideValue();
             
             switch (_rollBonuses.AdvantageType)
             {
                 case AdvantageType.None:
+                    ShowWinDiceEffect(_mainDice);
                     result += _mainDice.GetTopSideValue();
                     break;
                 case AdvantageType.Advantage:
                 {
-                    int mainDiceValue = _mainDice.GetTopSideValue();
-                    int advantageDiceValue = _advantageDice.GetTopSideValue();
-                
-                    result += mainDiceValue > advantageDiceValue ? mainDiceValue : advantageDiceValue;
+                    if (mainDiceValue > advantageDiceValue)
+                    {
+                        ShowWinDiceEffect(_mainDice);
+                        result += mainDiceValue;
+                    }
+                    else
+                    {
+                        ShowWinDiceEffect(_advantageDice);
+                        result += advantageDiceValue;
+                    }
+
                     break;
                 }
                 case AdvantageType.Disadvantage:
                 {
-                    int mainDiceValue = _mainDice.GetTopSideValue();
-                    int advantageDiceValue = _advantageDice.GetTopSideValue();
-                
-                    result += mainDiceValue < advantageDiceValue ? mainDiceValue : advantageDiceValue;
+                    if (mainDiceValue < advantageDiceValue)
+                    {
+                        ShowWinDiceEffect(_mainDice);
+                        result += mainDiceValue;
+                    }
+                    else
+                    {
+                        ShowWinDiceEffect(_advantageDice);
+                        result += advantageDiceValue;
+                    }
                     break;
                 }
             }
 
-            Debug.Log(result);
+            return result;
         }
-        
-        
+
+        private void ShowWinDiceEffect(Dice dice)
+        {
+            DOTween.Sequence()
+                .Append(dice.transform.DOScale(Vector3.one * 1.2f, 0.2f))
+                .Append(dice.transform.DOScale(Vector3.one, 0.2f));
+        }
     }
 }

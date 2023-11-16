@@ -1,14 +1,15 @@
-﻿using DiceRoller.Gameplay.Roll;
+﻿using DiceRoller.Gameplay;
+using DiceRoller.Gameplay.Roll;
 using Zenject;
 
 namespace DiceRoller.Installers
 {
-    public class RollBonusesInstaller : MonoInstaller
+    public class RollResultInstaller : MonoInstaller
     {
         public override void InstallBindings()
         {
             Container
-                .Bind<RollBonuses>()
+                .Bind<RollResult>()
                 .AsSingle();
         }
     }

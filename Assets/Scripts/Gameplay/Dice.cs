@@ -15,6 +15,11 @@ namespace DiceRoller.Gameplay
         [SerializeField] private Transform _diceTransform;
         [SerializeField] private Rigidbody _rigidbody;
     
+        /// <summary>
+        /// Имитация броска выполнена с помощью плагина DOTween, перемещает кубик в 2 случайные точки и возвращающий его на изначальное положение
+        /// </summary>
+        /// <param name="dicePosition">Изначальное положение куба</param>
+        /// <param name="onRollCompleteAction">Действия выполняющийеся после броска кубика</param>
         public void Roll(Vector3 dicePosition, Action onRollCompleteAction = null)
         {
             _rigidbody.isKinematic = true;
@@ -43,9 +48,17 @@ namespace DiceRoller.Gameplay
                 });
         }
 
+        /// <summary>
+        /// Выбирает случайную точку вокруг на игровом поле, пока выполнена в качестве заглушки, в полноценном проекте можно более осмысленную функцию написать
+        /// </summary>
+        /// <returns>Случайную точку в игровом пространстве</returns>
         private Vector3 CreateNewRandomPosition() =>
-            new Vector3(Random.Range(-5, 5), 0, Random.Range(-5, 5)).normalized * 5f;
+            new(Random.Range(-5, 5), 0, Random.Range(-5, 5));
 
+        /// <summary>
+        /// Каждая вершина кубика содержит в себе game object, соответсвенно game object который находится выше всех остальных является выпывшим значением
+        /// </summary>
+        /// <returns>Значение на вершине игрового кубика</returns>
         public int GetTopSideValue()
         {
             Vector3 topPosition = _sides[0].position;

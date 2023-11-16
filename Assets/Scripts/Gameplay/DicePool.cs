@@ -21,7 +21,7 @@ namespace DiceRoller.Gameplay
         [SerializeField] private float _appearTime = .5f;
         
         private RollBonuses _rollBonuses;
-
+        
         [Inject]
         private void Construct(RollBonuses rollBonuses)
         {
@@ -29,6 +29,9 @@ namespace DiceRoller.Gameplay
             _rollBonuses.OnAdvantageTypeChanged += UpdateDicesOnField;
         }
 
+        /// <summary>
+        /// Включает второй куб на поле, если включается бонус преимущества/помехи
+        /// </summary>
         private void UpdateDicesOnField()
         {
             if (_rollBonuses.AdvantageType == AdvantageType.None)
@@ -53,6 +56,10 @@ namespace DiceRoller.Gameplay
             _advantageDice.gameObject.SetActive(false);
         }
         
+        /// <summary>
+        /// Запускает процесс имитации броска кубов с указанием изначальной позиции куба, для возвращения его после броска
+        /// </summary>
+        /// <param name="onRollComplete">Различные действия которые надо запустить при завершении броска кубов(например перейти к рассчету броска)</param>
         public void RollDices(Action onRollComplete)
         {
             if (_rollBonuses.AdvantageType == AdvantageType.None)
@@ -66,10 +73,12 @@ namespace DiceRoller.Gameplay
             }
         }
 
+        /// <summary>
+        /// Обрабатывает параметр преимущества при броске кубика. При преимуществе выбирается лучший из двух кубов, при помехе худший из двух
+        /// </summary>
+        /// <returns>Значение на вершине кубика</returns>
         public int GetRollResult()
         {
-            int result = 0;
-            
             int mainDiceValue = _mainDice.GetTopSideValue();
             int advantageDiceValue = _advantageDice.GetTopSideValue();
             
@@ -77,42 +86,39 @@ namespace DiceRoller.Gameplay
             {
                 case AdvantageType.None:
                     ShowWinDiceEffect(_mainDice);
-                    result += _mainDice.GetTopSideValue();
-                    break;
+                    return _mainDice.GetTopSideValue();
                 case AdvantageType.Advantage:
                 {
                     if (mainDiceValue > advantageDiceValue)
                     {
                         ShowWinDiceEffect(_mainDice);
-                        result += mainDiceValue;
-                    }
-                    else
-                    {
-                        ShowWinDiceEffect(_advantageDice);
-                        result += advantageDiceValue;
+                        return mainDiceValue;
                     }
 
-                    break;
+                    ShowWinDiceEffect(_advantageDice);
+                    return advantageDiceValue;
                 }
                 case AdvantageType.Disadvantage:
                 {
                     if (mainDiceValue < advantageDiceValue)
                     {
                         ShowWinDiceEffect(_mainDice);
-                        result += mainDiceValue;
+                        return mainDiceValue;
                     }
-                    else
-                    {
-                        ShowWinDiceEffect(_advantageDice);
-                        result += advantageDiceValue;
-                    }
-                    break;
-                }
-            }
 
-            return result;
+                    ShowWinDiceEffect(_advantageDice);
+                    return advantageDiceValue;
+                }
+                default:
+                    Debug.LogError("Try to calculate unexpected AdvantageType");
+                    return -1;
+            }
         }
 
+        /// <summary>
+        /// Эффект увеличение выбранного для проверки куба
+        /// </summary>
+        /// <param name="dice">Куб с которым надо сотворить эффект</param>
         private void ShowWinDiceEffect(Dice dice)
         {
             DOTween.Sequence()

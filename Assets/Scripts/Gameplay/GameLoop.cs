@@ -57,14 +57,12 @@ namespace DiceRoller.Gameplay
         {
             if (criticalResult)
             {
-                _successPanelWidget.ShowWidget(_rollResult.ResultValue == 20);
+                _successPanelWidget.ShowWidget(_rollResult.ResultValue == 20, OnRollComplete);
             }
             else
             {
-                _successPanelWidget.ShowWidget(_rollResult.ResultValue >= _rollResult.GoalValue);
+                _successPanelWidget.ShowWidget(_rollResult.ResultValue >= _rollResult.GoalValue, OnRollComplete);
             }
-            
-            OnRollComplete?.Invoke();
         }
     }
 }

@@ -120,12 +120,16 @@ namespace DiceRoller.UI.BonusesPanel
 
         private void ActivateWidget(ModifierBonusWidget widget)
         {
+            if (widget.gameObject.activeSelf) return;
+            
             widget.gameObject.SetActive(true);
             widget.transform.DOScale(Vector3.one, _scaleTime);
         }
 
         private void DeactivateWidget(ModifierBonusWidget widget)
         {
+            if (!widget.gameObject.activeSelf) return;
+            
             widget
                 .transform.DOScale(Vector3.zero, _scaleTime)
                 .OnComplete(() =>

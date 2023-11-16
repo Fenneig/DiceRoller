@@ -1,4 +1,5 @@
-﻿using DG.Tweening;
+﻿using System;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
@@ -18,7 +19,7 @@ namespace DiceRoller.UI.SuccessPanel
             _panel.SetActive(false);
         }
 
-        public void ShowWidget(bool isWin)
+        public void ShowWidget(bool isWin, Action onShowComplete)
         {
             _panel.SetActive(true);
             _successText.text = isWin ? _textOnSuccess : _textOnFail;
@@ -29,7 +30,11 @@ namespace DiceRoller.UI.SuccessPanel
                     DOTween.Sequence()
                         .AppendInterval(_timeToShowResult)
                         .Append(_panel.transform.DOScale(Vector3.zero, .2f))
-                        .OnComplete(() => _panel.SetActive(false));
+                        .OnComplete(() =>
+                        {
+                            onShowComplete?.Invoke();
+                            _panel.SetActive(false);
+                        });
                 });
         }
     }

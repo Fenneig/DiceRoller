@@ -3507,7 +3507,7 @@ MonoBehaviour:
   _panel: {fileID: 1347977165}
   _textOnSuccess: Success
   _textOnFail: Fail
-  _timeToShowResult: 3
+  _timeToShowResult: 2
 --- !u!1001 &2142943851
 PrefabInstance:
   m_ObjectHideFlags: 0
